@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BUYSOMETHING — T-Shirts</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f5f3;
+      --surface: #ffffff;
+      --text: #111111;
+      --muted: #888888;
+      --accent: #111111;
+      --accent-hover: #333333;
+      --border: #e0e0e0;
+      --cart-w: 400px;
+      --radius: 2px;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ─────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 64px;
+    }
+
+    .nav-logo {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-link {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+    .nav-link:hover { color: var(--text); }
+
+    .cart-btn {
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cart-count {
+      background: var(--accent);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s;
+    }
+
+    /* ── HERO ────────────────────────────────────────── */
+    .hero {
+      padding: 80px 40px 60px;
+      max-width: 560px;
+    }
+
+    .hero-tag {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 380px;
+    }
+
+    /* ── FILTERS ─────────────────────────────────────── */
+    .filters {
+      padding: 0 40px 32px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      cursor: pointer;
+      background: none;
+      border: 1px solid var(--border);
+      padding: 8px 18px;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-radius: var(--radius);
+      transition: all 0.15s;
+    }
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* ── GRID ────────────────────────────────────────── */
+    .grid {
+      padding: 0 40px 80px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2px;
+    }
+
+    /* ── CARD ────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-img {
+      aspect-ratio: 3/4;
+      background: #f0f0ee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card-img svg {
+      width: 120px;
+      opacity: 0.15;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover .card-img svg { opacity: 0.25; }
+
+    .shirt-graphic {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .shirt-quote {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #555;
+      text-align: center;
+      max-width: 160px;
+      line-height: 1.6;
+      padding: 0 20px;
+    }
+
+    .shirt-mockup {
+      width: 140px;
+      height: 140px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+      font-weight: 600;
+      text-align: center;
+      padding: 16px;
+      line-height: 1.5;
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+    }
+
+    .card-body {
+      padding: 20px 20px 24px;
+    }
+
+    .card-category {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .card-name {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+
+    .card-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-price {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .card-sizes {
+      display: flex;
+      gap: 4px;
+    }
+
+    .size-dot {
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--border);
+      font-size: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 0;
+      cursor: pointer;
+      transition: all 0.12s;
+      border-radius: var(--radius);
+    }
+    .size-dot:hover,
+    .size-dot.selected {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .add-btn {
+      margin-top: 14px;
+      width: 100%;
+      padding: 12px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-radius: var(--radius);
+    }
+    .add-btn:hover { background: var(--accent-hover); }
+    .add-btn:active { transform: scale(0.99); }
+
+    /* ── CART OVERLAY ────────────────────────────────── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 200;
+    }
+    .overlay.open { display: block; }
+
+    .cart {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: var(--cart-w);
+      max-width: 100vw;
+      background: var(--surface);
+      z-index: 201;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    .cart.open { transform: translateX(0); }
+
+    .cart-header {
+      padding: 28px 28px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .close-btn {
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: var(--muted);
+      line-height: 1;
+    }
+    .close-btn:hover { color: var(--text); }
+
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 28px;
+    }
+
+    .cart-empty {
+      text-align: center;
+      padding: 60px 0;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-item-img {
+      width: 64px;
+      height: 64px;
+      border-radius: 2px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      color: #fff;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .cart-item-info { flex: 1; }
+
+    .cart-item-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .cart-item-meta {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .cart-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .qty-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .qty-btn {
+      cursor: pointer;
+      background: none;
+      border: 1px solid var(--border);
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--text);
+      border-radius: var(--radius);
+    }
+    .qty-btn:hover { border-color: var(--accent); }
+
+    .qty-val {
+      font-size: 13px;
+      font-weight: 600;
+      min-width: 16px;
+      text-align: center;
+    }
+
+    .cart-item-price {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .remove-btn {
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 6px;
+      padding: 0;
+    }
+    .remove-btn:hover { color: var(--text); }
+
+    .cart-footer {
+      padding: 20px 28px 28px;
+      border-top: 1px solid var(--border);
+    }
+
+    .cart-summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .cart-total-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 15px;
+      font-weight: 700;
+      margin: 12px 0 20px;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-radius: var(--radius);
+    }
+    .checkout-btn:hover { background: var(--accent-hover); }
+
+    /* ── CHECKOUT MODAL ──────────────────────────────── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      width: 520px;
+      max-width: 95vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 40px;
+    }
+
+    .modal-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full { grid-column: 1 / -1; }
+
+    .form-label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .form-input {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      border-radius: var(--radius);
+      transition: border-color 0.15s;
+      background: var(--bg);
+    }
+    .form-input:focus { border-color: var(--accent); }
+
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 24px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .order-summary {
+      background: var(--bg);
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      padding: 4px 0;
+      color: var(--muted);
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 700;
+      padding-top: 12px;
+      margin-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      padding: 14px;
+      background: none;
+      border: 1px solid var(--border);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: var(--radius);
+      transition: all 0.15s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    .btn-primary {
+      flex: 2;
+      padding: 14px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: var(--radius);
+      transition: background 0.15s;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    /* ── SUCCESS ─────────────────────────────────────── */
+    .success-state {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .success-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .success-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+
+    .success-sub {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── TOAST ───────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--accent);
+      color: #fff;
+      padding: 12px 24px;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: all 0.3s;
+      pointer-events: none;
+      z-index: 400;
+      border-radius: var(--radius);
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 20px; }
+      .hero { padding: 48px 20px 40px; }
+      .filters { padding: 0 20px 24px; }
+      .grid { padding: 0 0 60px; gap: 1px; }
+      .cart { width: 100vw; }
+      .modal { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">BUYSOMETHING</a>
+  <div class="nav-right">
+    <a class="nav-link" href="#">T-Shirts</a>
+    <a class="nav-link" href="#">About</a>
+    <button class="cart-btn" id="openCart">
+      Cart
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-tag">New Drop</p>
+  <h1>Words on<br>your chest.</h1>
+  <p>Minimal tees printed with short quotes. Wear what you think.</p>
+</section>
+
+<!-- FILTERS -->
+<div class="filters">
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="philosophy">Philosophy</button>
+  <button class="filter-btn" data-filter="irony">Irony</button>
+  <button class="filter-btn" data-filter="nature">Nature</button>
+  <button class="filter-btn" data-filter="self">Self</button>
+</div>
+
+<!-- PRODUCT GRID -->
+<div class="grid" id="grid"></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- CART OVERLAY -->
+<div class="overlay" id="overlay"></div>
+<aside class="cart" id="cartPanel">
+  <div class="cart-header">
+    <span class="cart-title">Cart</span>
+    <button class="close-btn" id="closeCart">×</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty" id="cartEmpty">Your cart is empty.</div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-summary-row"><span>Subtotal</span><span id="subtotal">$0</span></div>
+    <div class="cart-summary-row"><span>Shipping</span><span>Free</span></div>
+    <div class="cart-total-row"><span>Total</span><span id="total">$0</span></div>
+    <button class="checkout-btn" id="openCheckout">Checkout</button>
+  </div>
+</aside>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkoutOverlay">
+  <div class="modal" id="checkoutModal">
+    <div id="checkoutForm">
+      <div class="modal-title">Checkout</div>
+      <div class="section-label">Order summary</div>
+      <div class="order-summary" id="orderSummary"></div>
+      <div class="section-label">Shipping information</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First name</label>
+          <input class="form-input" type="text" id="firstName" placeholder="Alex" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last name</label>
+          <input class="form-input" type="text" id="lastName" placeholder="Kim" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" id="email" placeholder="alex@example.com" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label class="form-label">Address</label>
+          <input class="form-input" type="text" id="address" placeholder="123 Main St" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">City</label>
+          <input class="form-input" type="text" id="city" placeholder="New York" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">ZIP</label>
+          <input class="form-input" type="text" id="zip" placeholder="10001" />
+        </div>
+      </div>
+      <div class="section-label">Payment</div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label class="form-label">Card number</label>
+          <input class="form-input" type="text" id="card" placeholder="4242 4242 4242 4242" maxlength="19" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Expiry</label>
+          <input class="form-input" type="text" id="expiry" placeholder="MM/YY" maxlength="5" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">CVV</label>
+          <input class="form-input" type="text" id="cvv" placeholder="123" maxlength="4" />
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="closeCheckout">Cancel</button>
+        <button class="btn-primary" id="placeOrder">Place Order</button>
+      </div>
+    </div>
+    <div class="success-state" id="successState" style="display:none">
+      <div class="success-icon">✓</div>
+      <div class="success-title">Order placed.</div>
+      <p class="success-sub">Thanks! Your tees are on their way.<br>Check your email for confirmation.</p>
+      <div style="margin-top:28px">
+        <button class="btn-primary" id="closeSuccess" style="width:100%">Back to Shop</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const PRODUCTS = [
+    {
+      id: 1,
+      name: "Carpe Diem",
+      quote: "Seize the day",
+      desc: "100% organic cotton, heavyweight 280 GSM.",
+      category: "philosophy",
+      price: 34,
+      color: "#1a1a1a",
+      badge: "Bestseller",
+    },
+    {
+      id: 2,
+      name: "Amor Fati",
+      quote: "Love your fate",
+      desc: "Washed fleece-finish, relaxed fit.",
+      category: "philosophy",
+      price: 36,
+      color: "#2d2d2d",
+      badge: null,
+    },
+    {
+      id: 3,
+      name: "Et Cetera",
+      quote: "And so on",
+      desc: "Slub-cotton blend, slightly off-white.",
+      category: "irony",
+      price: 32,
+      color: "#3a3530",
+      badge: "New",
+    },
+    {
+      id: 4,
+      name: "Whatever",
+      quote: "Whatever.",
+      desc: "Pigment-dyed vintage wash, heavyweight.",
+      category: "irony",
+      price: 38,
+      color: "#4a3f35",
+      badge: null,
+    },
+    {
+      id: 5,
+      name: "Here Now",
+      quote: "Only here. Only now.",
+      desc: "Ultra-soft 220 GSM jersey, boxy cut.",
+      category: "self",
+      price: 34,
+      color: "#263238",
+      badge: null,
+    },
+    {
+      id: 6,
+      name: "Pale Blue",
+      quote: "A mote of dust\nsuspended in a sunbeam",
+      desc: "Enzyme-washed mineral dye, faded look.",
+      category: "nature",
+      price: 40,
+      color: "#37474f",
+      badge: "Limited",
+    },
+    {
+      id: 7,
+      name: "Nothing Lasts",
+      quote: "This too shall pass",
+      desc: "Garment-dyed, lived-in feel.",
+      category: "philosophy",
+      price: 36,
+      color: "#212121",
+      badge: null,
+    },
+    {
+      id: 8,
+      name: "Less Is",
+      quote: "Less is more",
+      desc: "Minimal print, essential-weight jersey.",
+      category: "self",
+      price: 30,
+      color: "#1c1c1c",
+      badge: null,
+    },
+  ];
+
+  const SIZES = ["XS", "S", "M", "L", "XL"];
+
+  let cart = [];
+  let selectedSizes = {};
+  let activeFilter = "all";
+
+  /* ── RENDER GRID ─────────────────────────────────── */
+  function renderGrid() {
+    const grid = document.getElementById("grid");
+    const filtered = activeFilter === "all"
+      ? PRODUCTS
+      : PRODUCTS.filter(p => p.category === activeFilter);
+
+    grid.innerHTML = filtered.map(p => `
+      <div class="card">
+        <div class="card-img">
+          ${p.badge ? `<span class="card-badge">${p.badge}</span>` : ""}
+          <div class="shirt-mockup" style="background:${p.color}">
+            ${p.quote.replace(/\n/g, "<br>")}
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-category">${p.category}</div>
+          <div class="card-name">${p.name}</div>
+          <div class="card-desc">${p.desc}</div>
+          <div class="card-footer">
+            <span class="card-price">$${p.price}</span>
+            <div class="card-sizes">
+              ${SIZES.map(s => `
+                <div class="size-dot ${selectedSizes[p.id] === s ? "selected" : ""}"
+                     onclick="selectSize(event, ${p.id}, '${s}')">${s}</div>
+              `).join("")}
+            </div>
+          </div>
+          <button class="add-btn" onclick="addToCart(${p.id})">Add to Cart</button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function selectSize(e, productId, size) {
+    e.stopPropagation();
+    selectedSizes[productId] = selectedSizes[productId] === size ? null : size;
+    renderGrid();
+  }
+
+  /* ── CART ────────────────────────────────────────── */
+  function addToCart(productId) {
+    const product = PRODUCTS.find(p => p.id === productId);
+    const size = selectedSizes[productId];
+    if (!size) {
+      showToast("Please select a size");
+      return;
+    }
+    const existing = cart.find(i => i.id === productId && i.size === size);
+    if (existing) {
+      existing.qty++;
+    } else {
+      cart.push({ ...product, size, qty: 1 });
+    }
+    updateCartUI();
+    showToast(`${product.name} — ${size} added`);
+    openCart();
+  }
+
+  function updateCartUI() {
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    document.getElementById("cartCount").textContent = count;
+
+    const subtotalAmt = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    document.getElementById("subtotal").textContent = `$${subtotalAmt}`;
+    document.getElementById("total").textContent = `$${subtotalAmt}`;
+
+    const empty = document.getElementById("cartEmpty");
+    const footer = document.getElementById("cartFooter");
+    const itemsEl = document.getElementById("cartItems");
+
+    if (cart.length === 0) {
+      empty.style.display = "block";
+      footer.style.display = "none";
+      itemsEl.innerHTML = `<div class="cart-empty" id="cartEmpty">Your cart is empty.</div>`;
+    } else {
+      footer.style.display = "block";
+      itemsEl.innerHTML = cart.map((item, idx) => `
+        <div class="cart-item">
+          <div class="cart-item-img" style="background:${item.color}">${item.name.split(" ")[0]}</div>
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-meta">Size ${item.size} · $${item.price} each</div>
+            <div class="cart-item-row">
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="changeQty(${idx}, -1)">−</button>
+                <span class="qty-val">${item.qty}</span>
+                <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
+              </div>
+              <span class="cart-item-price">$${item.price * item.qty}</span>
+            </div>
+            <button class="remove-btn" onclick="removeItem(${idx})">Remove</button>
+          </div>
+        </div>
+      `).join("");
+    }
+  }
+
+  function changeQty(idx, delta) {
+    cart[idx].qty += delta;
+    if (cart[idx].qty <= 0) cart.splice(idx, 1);
+    updateCartUI();
+  }
+
+  function removeItem(idx) {
+    cart.splice(idx, 1);
+    updateCartUI();
+  }
+
+  function openCart() {
+    document.getElementById("cartPanel").classList.add("open");
+    document.getElementById("overlay").classList.add("open");
+  }
+
+  function closeCart() {
+    document.getElementById("cartPanel").classList.remove("open");
+    document.getElementById("overlay").classList.remove("open");
+  }
+
+  /* ── CHECKOUT ────────────────────────────────────── */
+  function openCheckout() {
+    if (cart.length === 0) return;
+    const subtotalAmt = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    document.getElementById("orderSummary").innerHTML = `
+      ${cart.map(i => `
+        <div class="summary-item">
+          <span>${i.name} (${i.size}) × ${i.qty}</span>
+          <span>$${i.price * i.qty}</span>
+        </div>
+      `).join("")}
+      <div class="summary-total"><span>Total</span><span>$${subtotalAmt}</span></div>
+    `;
+    document.getElementById("checkoutForm").style.display = "block";
+    document.getElementById("successState").style.display = "none";
+    document.getElementById("checkoutOverlay").classList.add("open");
+    closeCart();
+  }
+
+  function closeCheckout() {
+    document.getElementById("checkoutOverlay").classList.remove("open");
+  }
+
+  function placeOrder() {
+    const fields = ["firstName", "lastName", "email", "address", "city", "zip", "card", "expiry", "cvv"];
+    for (const id of fields) {
+      if (!document.getElementById(id).value.trim()) {
+        document.getElementById(id).focus();
+        showToast("Please fill all fields");
+        return;
+      }
+    }
+    document.getElementById("checkoutForm").style.display = "none";
+    document.getElementById("successState").style.display = "block";
+    cart = [];
+    updateCartUI();
+  }
+
+  /* ── TOAST ───────────────────────────────────────── */
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+  }
+
+  /* ── FILTERS ─────────────────────────────────────── */
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      activeFilter = btn.dataset.filter;
+      renderGrid();
+    });
+  });
+
+  /* ── CARD FORMATTING ─────────────────────────────── */
+  document.getElementById("card").addEventListener("input", function () {
+    this.value = this.value.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim().slice(0, 19);
+  });
+  document.getElementById("expiry").addEventListener("input", function () {
+    this.value = this.value.replace(/\D/g, "").replace(/^(\d{2})(\d)/, "$1/$2").slice(0, 5);
+  });
+
+  /* ── EVENT BINDINGS ──────────────────────────────── */
+  document.getElementById("openCart").addEventListener("click", openCart);
+  document.getElementById("closeCart").addEventListener("click", closeCart);
+  document.getElementById("overlay").addEventListener("click", closeCart);
+  document.getElementById("openCheckout").addEventListener("click", openCheckout);
+  document.getElementById("closeCheckout").addEventListener("click", closeCheckout);
+  document.getElementById("placeOrder").addEventListener("click", placeOrder);
+  document.getElementById("closeSuccess").addEventListener("click", () => {
+    closeCheckout();
+    ["firstName","lastName","email","address","city","zip","card","expiry","cvv"]
+      .forEach(id => document.getElementById(id).value = "");
+  });
+
+  /* ── INIT ────────────────────────────────────────── */
+  renderGrid();
+</script>
+</body>
+</html>
